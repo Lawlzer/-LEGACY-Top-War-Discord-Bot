@@ -5,7 +5,7 @@
 const requirements = require('./requirements');
 const exampleController = require('../lib/example');
 
-exports.AddCommand = exports.SetCommand = {
+exports.AddCommand = exports.SetCommand = exports.AddUserCommand = exports.SetUserCommand = {
     blurb: 'Add a new command!',
     help: 'Add/set a new command that anybody can use.',
     example: '<commandPrefix>setCommand leader Lawlzer is the leader',
@@ -13,7 +13,7 @@ exports.AddCommand = exports.SetCommand = {
     execute: exampleController.setCommand,
   }
   
-  exports.RemoveCommand = exports.DeleteCommand = {
+  exports.RemoveCommand = exports.DeleteCommand = exports.DeleteUserCommand = exports.RemoveUserCommand{
     blurb: 'Remove a command!',
     help: 'Remove a public command.',
     example: '<commandPrefix>removeCommand leader',
@@ -21,7 +21,7 @@ exports.AddCommand = exports.SetCommand = {
     execute: exampleController.removeCommand,
   }
 
-  exports.GetUserCommmands = exports.UserCommands = {
+  exports.GetUserCommmands = exports.UserCommands = exports.GetCommands = {
     blurb: 'Get a list of all user-created commands',
     help: 'Returns a list of all user-created commands.',
     example: '<commandPrefix>getUserCommands',

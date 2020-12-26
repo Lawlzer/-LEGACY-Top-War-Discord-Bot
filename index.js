@@ -6,17 +6,18 @@
 // along with things you may want to remove :)
 // If you have any questions, feel free to contact me on Discord. Lawlzer#4013
 
-// Invite Link for the bot: https://discordapp.com/oauth2/authorize?client_id=788748097160216617&scope=bot
+// Invite Link for the bot: https://discordapp.com/oauth2/authorize?client_id=206980947298615297&scope=bot
 
 console.log('The bot is in index.js');
 
-const production = true; // set to true if it's the "production" version of your bot
+const production = false; // set to true if it's the "production" version of your bot
 const devTestingGuildId = '547192605927145481'; // set to the id of your TESTING server. This IS important.
 const devUserId = '206980947298615297'; 
 // should be the GUILD id, not the CHANNEL id.
 
 const commands = require('./commands/allCommands');
 const databaseController = require('./lib/database');
+const exampleController = require('./lib/example');
 const mongoose = require('mongoose');
 const Discord = require('discord.js');
 
@@ -38,7 +39,7 @@ const bot = new Discord.Client();
 var messageDeveloper; 
 
 bot.on('ready', () => { // When our bot is ready:
-  bot.user.setActivity("with myself");
+  bot.user.setActivity("TopWar Battle Game");
   // https://discord.js.org/#/docs/main/stable/class/ClientUser?scrollTo=setActivity
   // bot.user.setActivity('YouTube', { type: 'WATCHING' })
   // .then(presence => console.log(`Activity set to ${presence.game ? presence.game.name : 'none'}`))
@@ -100,7 +101,7 @@ bot.on('message', async message => {
   }
 
   if (message.guild.id != devTestingGuildId && !production) {
-    console.log('Not in dev testing server, and it\'s not the production bot. Message ignored.')
+    console.log('In dev testing server, but this is the production bot. Message ignored.')
     return; 
   }
 
@@ -132,7 +133,7 @@ bot.on('message', async message => {
 
 
 
-    if (await findUserCommand(database, commandName, bot, message) == true) {
+    if (await exampleController.findUserCommand(bot, message, database, commandName) == true) {
       // this command will return "true" if it finds a user created command and will then send the message to the channel
       // look at /commands/example.js to see the command setup, and /lib/example.js for the command itself
       return; 
@@ -219,14 +220,3 @@ function convertKeysToLowerCase(obj) {
   }
   return output;
 };
-
-async function findUserCommand(database, inputCommand, bot, message) {
-  var allCommands = database.userCreatedCommands; 
-  for (let i = 0; i < allCommands.length; i++) {
-    if (inputCommand == allCommands[i].commandTrigger) {
-      await databaseController.sendEmbed(bot, message, allCommands[i].commandTrigger, allCommands[i].commandDescription);
-      return true; 
-    }
-  }
-  return false; // return false so we don't do anything when returning this function
-} 
