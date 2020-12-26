@@ -13,7 +13,7 @@ exports.AddCommand = exports.SetCommand = exports.AddUserCommand = exports.SetUs
     execute: exampleController.setCommand,
   }
   
-  exports.RemoveCommand = exports.DeleteCommand = exports.DeleteUserCommand = exports.RemoveUserCommand{
+  exports.RemoveCommand = exports.DeleteCommand = exports.DeleteUserCommand = exports.RemoveUserCommand = {
     blurb: 'Remove a command!',
     help: 'Remove a public command.',
     example: '<commandPrefix>removeCommand leader',
