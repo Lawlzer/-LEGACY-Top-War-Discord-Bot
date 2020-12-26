@@ -10,7 +10,7 @@
 
 console.log('The bot is in index.js');
 
-const production = false; // set to true if it's the "production" version of your bot
+const production = true; // set to true if it's the "production" version of your bot
 const devTestingGuildId = '547192605927145481'; // set to the id of your TESTING server. This IS important.
 const devUserId = '206980947298615297'; 
 // should be the GUILD id, not the CHANNEL id.
