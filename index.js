@@ -39,7 +39,7 @@ const bot = new Discord.Client();
 var messageDeveloper; 
 
 bot.on('ready', () => { // When our bot is ready:
-  bot.user.setActivity("TopWar Battle Game");
+  bot.user.setActivity("with myself");
   // https://discord.js.org/#/docs/main/stable/class/ClientUser?scrollTo=setActivity
   // bot.user.setActivity('YouTube', { type: 'WATCHING' })
   // .then(presence => console.log(`Activity set to ${presence.game ? presence.game.name : 'none'}`))
@@ -72,14 +72,29 @@ bot.on('messageReactionAdd', async (reaction, user) => {
       correctObject = allObjects[i];
     }
   }
-  if (!correctObject) { return; } // somebody probably reacted to a non-bot message with your custom emoji // or they reacted after the thing was deleted from our saved array
-  
+
+  if (!correctObject) { 
+    // somebody probably reacted to a non-bot message with your custom emoji 
+    // or they reacted after the thing was deleted from our saved array
+    if (reaction.message.editable) { // they reacted to a message by the bot, BUT they waited too long, OR the bot was restarted inbetween them running the command and trying to react.
+      var embed = reaction.message.embeds[0] // we can't use the correctObject.basicEmbed, as that doesn't exist.. because we couldn't find the correctObject
+      console.log(reaction.message.embeds[0].footer);   
+      // embed.setFooter();
+      console.log(embed); 
+      reaction.message.edit('Nerd Dump Error: The nerd dumped too late. The nerd needs to dump within ' + await databaseController.returnNerdDumpTimeOut() + ' seconds.'); 
+      return; // technically useless return.. but it looks better, and signifies that there *could* be lower code
+    }
+    // they reacted to a message that isn't by the bot.... no response is needed
+    return; 
+  } 
+
+  const currentTime = Date.now(); 
+
   var embed = correctObject.basicEmbed; 
   embed.setFooter(
     'NERD DUMP ACTIVATED!' +
-    '\nDiscord --> Bot response time: ' + (correctObject.botTime - correctObject.initialMessageTime) +'ms.' + 
-    '\nBot --> Discord response time: ' + (correctObject.secondMessageTime - correctObject.botTime) + 'ms.' +
-    '\nTotal response time: ' + (correctObject.secondMessageTime - correctObject.initialMessageTime) + 'ms.'  
+    '\nDiscord message sent --> Discord message reacted to time: ' + (correctObject.discordSecondMessageTime - correctObject.discordInitialMessageTime) + 'ms.' +
+    '\nBot message recieved --> Bot message sent (total time for the bot to handle the message)' + (correctObject.initialMessageStarted - correctObject.initialMessageSent) + 'ms.'
     );
   reaction.message.edit(embed)
 })
@@ -107,6 +122,7 @@ bot.on('message', async message => {
 
   // this handles the command itself, and handles all of the stuff for running the command itself
   await (async function executeCommand() {
+    message.messageRecievedByBotTime = Date.now(); // slightly jank, but this will be used in the nerd dump information
     const database = await databaseController.getOrCreateDatabase(message.guild.id);
     var commandPrefix = database.commandPrefix;
     var commandName = message.content.toLowerCase();
@@ -179,7 +195,7 @@ bot.on('message', async message => {
 
       if (argsLowercase[0] == '') { argsLowercase.shift(); } // if the 0th array in the array is empty, this removes it.
       // it happens a lot (or atleast used to), and this was my quick-fix. Probably should check this again in the future.
-
+      
       var result = await command.execute(bot, message, argsLowercase, content); 
 
       if (!!result && result.hasOwnProperty('then') && typeof result.then === 'function') {

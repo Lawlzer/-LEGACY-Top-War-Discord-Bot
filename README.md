@@ -12,6 +12,9 @@ Template-Discord-Bot is a discord bot created to mainly help myself in the futur
     - (example .env file)
     MONGODB_URI=mongodb+srv://yourUsername:yourPassword@yourMongoClusterName-ljhef.mongodb.net/yourMongoCollectionName?retryWrites=true
     DISCORD_BOT_SECRET=yourBotSecret
+	
+	
+- !TODO : Add everything with Heroku, and how to add it to Github
 
 ## Usage
 
