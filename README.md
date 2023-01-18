@@ -1,3 +1,5 @@
+### This bot is EXTREMELY out of date. Do not try to use it.
+
 ## Template-Discord-Bot
 
 Template-Discord-Bot is a discord bot created to mainly help myself in the future, but also yourself, if you wish to use it.
